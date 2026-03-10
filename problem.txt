@@ -1,0 +1,38 @@
+=========================================================
+ACTORS AND USAGE SCENARIOS 
+System: Multithreaded Data Processing & Deadlock Resolver
+=========================================================
+
+1. ACTORS
+---------
+* System Administrator (Primary Actor): 
+  The human user who configures the simulation parameters (e.g., number of worker threads, data size, lock timeout limits) and starts the execution.
+  
+* Windows OS File System (External Actor): 
+  The local storage environment that provides the input data files (e.g., raw text or data streams) and stores the final, safely processed output files.
+
+* Log & Monitoring Console (External Actor): 
+  The interface (terminal or GUI) that receives and displays real-time streams of thread states, mutex locks, race condition alerts, and deadlock warnings.
+
+
+2. USAGE SCENARIOS
+------------------
+Scenario 1: System Initialization & Configuration
+- The System Administrator defines the number of concurrent worker threads and sets up the shared resources (e.g., a shared memory buffer).
+- The system allocates memory and initializes the necessary Mutexes and Semaphores for secure resource sharing.
+- The system connects to the Windows OS File System to load the initial dataset into memory.
+
+Scenario 2: Concurrent Data Processing
+- The system launches all worker threads simultaneously.
+- Threads actively compete to read from and write to the shared memory buffer.
+- To prevent Data Corruption (Race Conditions), threads must successfully request and acquire a Mutex lock before entering their critical sections.
+
+Scenario 3: Deadlock Detection & Resolution
+- A situation arises where two or more threads are waiting indefinitely for locks held by each other (Circular Wait), triggering a deadlock state.
+- The Deadlock Resolver component actively monitors lock requests and detects this anomaly.
+- The system intervenes by preempting a resource, forcing a lock release, or rolling back a specific thread to resolve the deadlock and resume the process.
+
+Scenario 4: Real-time Monitoring & Reporting
+- Throughout the execution, the Log & Monitoring Console continuously updates the state of each thread (New, Runnable, Blocked, Waiting, Terminated).
+- Once all data is processed, the system writes the final results back to the Windows OS File System.
+- The System Administrator reviews the final log to analyze system performance and see how many deadlocks were successfully avoided or resolved.
